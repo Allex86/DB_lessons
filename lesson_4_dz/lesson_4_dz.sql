@@ -65,6 +65,7 @@ SELECT * FROM `empl_in_all_departments`;
 
 
 -- 2. Создать функцию, которая найдет менеджера по имени и фамилии.
+/* 
 CREATE OR REPLACE FUNCTION `search_f_l_name`(`fstnm` VARCHAR(14), `lstnm` VARCHAR(16)) 
 RETURNS VARCHAR(255)
 RETURN
@@ -98,7 +99,34 @@ RETURN
 SELECT `search_f_l_name`('Sumant', 'Peac');
 
 SELECT `search_f_l_name`('Tzvetan', 'Zielinski');
+*/
 
+CREATE OR REPLACE FUNCTION `search_f_l_name`(`fstnm` VARCHAR(14), `lstnm` VARCHAR(16)) 
+RETURNS VARCHAR(255)
+RETURN
+    (
+    SELECT
+        CONCAT(
+            employees.emp_no,
+            ' ',
+            employees.birth_date,
+            ' ',
+            employees.first_name,
+            ' ',
+            employees.last_name,
+            ' ',
+            employees.gender,
+            ' ',
+            employees.hire_date
+        )
+    FROM `dept_manager`
+    JOIN employees ON employees.emp_no = dept_manager.emp_no
+    WHERE
+        employees.first_name = fstnm AND employees.last_name = lstnm)
+
+SELECT `search_f_l_name`('Margareta', 'Markovitch');
+
+SELECT `search_f_l_name`('Vishwani', 'Minakawa');
 
 
 -- 3. Создать триггер, который при добавлении нового сотрудника будет выплачивать ему вступительный бонус в таблицу salary.
